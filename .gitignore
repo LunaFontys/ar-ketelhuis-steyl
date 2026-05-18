@@ -15,6 +15,8 @@ UserSettings/
 *.tmp
 *.user
 *.userprefs
+*.apk
+*_BackUpThisFolder_ButDontShipIt*/
 
 .DS_Store
 Thumbs.db
