@@ -1,0 +1,36 @@
+# AR Ketelhuis Steyl
+
+AR Ketelhuis Steyl is a Unity AR prototype made for a school/client project at Fontys. The goal of the project is to explore how AR can be used to create an interactive educational experience for the Ketelhuis in Steyl.
+
+The prototype focuses on placing and interacting with AR objects on a tablet. One of the main interactions is a valve mechanic where the user turns a virtual valve to affect the state of the experience.
+
+## Context
+
+This project was made during my HBO-ICT study at Fontys University of Applied Sciences. The project was connected to the Ketelhuis in Steyl, where the goal was to design an educational experience for primary school pupils.
+
+## My contribution
+
+I worked on the Unity AR prototype and focused on testing basic AR interaction. I set up AR Foundation, plane detection, object placement, and a first valve interaction prototype.
+
+## Features
+
+- AR plane detection
+- Tap-to-place interaction
+- Interactive valve prototype
+- Visual feedback through object state changes
+- Unity tablet build testing
+
+## Tech stack
+
+- Unity
+- AR Foundation
+- ARCore
+- C#
+
+## Current status
+
+This project is still a prototype. The main goal was to validate basic AR placement and interaction before developing a more complete educational experience.
+
+## Media
+
+Demo video and screenshots will be added later.
