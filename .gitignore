@@ -15,7 +15,7 @@ UserSettings/
 *.tmp
 *.user
 *.userprefs
-# Unity build backups
+*.apk
 *_BackUpThisFolder_ButDontShipIt*/
 
 .DS_Store
