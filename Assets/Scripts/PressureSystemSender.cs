@@ -5,45 +5,63 @@ using UnityEngine.Networking;
 
 public class PressureSyncSender : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private PressureSystem pressureSystem;
+    [Header("Wheel References")]
+    [SerializeField] private WheelDragRotate leftValveWheel;
+    [SerializeField] private WheelDragRotate rightValveWheel;
 
     [Header("Server")]
     [SerializeField] private string serverUrl = "http://192.168.1.100:3000/valve-state";
     [SerializeField] private float sendInterval = 0.2f;
 
-    private Coroutine sendRoutine;
 
     private void Start()
     {
-        if (pressureSystem == null)
-        {
-            pressureSystem = GetComponent<PressureSystem>();
-        }
-
-        sendRoutine = StartCoroutine(SendPressureLoop());
+        Debug.Log("PressureSyncSender started on object: " + gameObject.name);
+        Debug.Log("PressureSyncSender instance ID: " + GetInstanceID());
+        Debug.Log("PressureSyncSender serverUrl = " + serverUrl);
+        StartCoroutine(SendValveLoop());
     }
 
-    private IEnumerator SendPressureLoop()
+    private static PressureSyncSender activeSender;
+
+    private void Awake()
+    {
+        if (activeSender != null && activeSender != this)
+        {
+            Debug.LogWarning("Duplicate PressureSyncSender destroyed: " + gameObject.name);
+            Destroy(gameObject);
+            return;
+        }
+
+        activeSender = this;
+    }
+
+    private IEnumerator SendValveLoop()
     {
         while (true)
         {
-            SendPressureValue();
+            SendValveValues();
             yield return new WaitForSeconds(sendInterval);
         }
     }
 
-    private void SendPressureValue()
+    private void SendValveValues()
     {
-        if (pressureSystem == null)
+        if (leftValveWheel == null || rightValveWheel == null)
+        {
+            Debug.LogWarning("Valve wheel reference missing.");
             return;
+        }
 
-        int pressure = Mathf.RoundToInt(pressureSystem.PressureValue * 100f);
+        int leftValue = Mathf.RoundToInt(leftValveWheel.ValveValue);
+        int rightValue = Mathf.RoundToInt(rightValveWheel.ValveValue);
+
+        Debug.Log($"Sending valve values - valve1: {leftValue}, valve2: {rightValue}");
 
         string json = JsonUtility.ToJson(new ValveStateData
         {
-            valve1 = pressure,
-            valve2 = pressure
+            valve1 = leftValue,
+            valve2 = rightValue
         });
 
         StartCoroutine(PostValveState(json));
@@ -63,7 +81,11 @@ public class PressureSyncSender : MonoBehaviour
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogWarning("Failed to send pressure: " + request.error);
+                Debug.LogWarning("Failed to send valve values: " + request.error);
+            }
+            else
+            {
+                Debug.Log("Valve values sent successfully: " + json);
             }
         }
     }

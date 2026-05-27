@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "AR_Ketelhuis_Steyl.slnx"
+    "dotnet.defaultSolution": "AR_Ketelhuis_Test.slnx"
 }

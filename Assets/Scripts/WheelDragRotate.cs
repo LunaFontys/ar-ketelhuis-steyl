@@ -2,33 +2,23 @@ using UnityEngine;
 
 public class WheelDragRotate : MonoBehaviour
 {
-    public enum PressureDirection
-    {
-        Increase,
-        Decrease
-    }
-
     [Header("Rotation Settings")]
     [SerializeField] private float rotationSpeed = 1f;
     [SerializeField] private Vector3 rotationAxis = new Vector3(0f, 1f, 0f);
 
-    [Header("Pressure")]
-    [SerializeField] private PressureSystem pressureSystem;
-    [SerializeField] private PressureDirection pressureDirection = PressureDirection.Increase;
-    [SerializeField] private float pressureInputMultiplier = 1f;
+    [Header("Valve Value")]
+    [SerializeField] private float valveChangeSpeed = 0.05f;
+    [SerializeField, Range(0f, 100f)] private float valveValue = 0f;
 
     private Camera mainCamera;
     private bool isDragging;
     private Vector2 previousTouchPosition;
 
+    public float ValveValue => valveValue;
+
     private void Start()
     {
         mainCamera = Camera.main;
-
-        if (pressureSystem == null)
-        {
-            pressureSystem = GetComponentInParent<PressureSystem>();
-        }
     }
 
     private void Update()
@@ -77,23 +67,14 @@ public class WheelDragRotate : MonoBehaviour
 
         transform.Rotate(rotationAxis, angle, Space.Self);
 
-        SendPressureInput(angle);
+        UpdateValveValue(angle);
 
         previousTouchPosition = currentTouchPosition;
     }
 
-    private void SendPressureInput(float angle)
+    private void UpdateValveValue(float angle)
     {
-        if (pressureSystem == null)
-            return;
-
-        float inputAmount = Mathf.Abs(angle) * pressureInputMultiplier;
-
-        if (pressureDirection == PressureDirection.Decrease)
-        {
-            inputAmount *= -1f;
-        }
-
-        pressureSystem.AddPressureInput(inputAmount);
+        float changeAmount = angle * valveChangeSpeed;
+        valveValue = Mathf.Clamp(valveValue + changeAmount, 0f, 100f);
     }
 }

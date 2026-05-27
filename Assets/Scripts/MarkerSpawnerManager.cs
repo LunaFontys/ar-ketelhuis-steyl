@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public class MarkerSpawnManager : MonoBehaviour
 {
@@ -11,38 +11,80 @@ public class MarkerSpawnManager : MonoBehaviour
     [SerializeField] private Vector3 localScale = Vector3.one;
 
     private GameObject spawnedInteractionRoot;
+    private ARTrackedImage activeTrackedImage;
 
     private void OnEnable()
     {
-        trackedImageManager.trackablesChanged.AddListener(OnTrackedImagesChanged);
+        if (trackedImageManager != null)
+        {
+            trackedImageManager.trackablesChanged.AddListener(OnTrackedImagesChanged);
+        }
     }
 
     private void OnDisable()
     {
-        trackedImageManager.trackablesChanged.RemoveListener(OnTrackedImagesChanged);
+        if (trackedImageManager != null)
+        {
+            trackedImageManager.trackablesChanged.RemoveListener(OnTrackedImagesChanged);
+        }
     }
 
     private void OnTrackedImagesChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
     {
         foreach (ARTrackedImage trackedImage in args.added)
         {
-            SpawnOrUpdateObject(trackedImage);
+            TrySetActiveTrackedImage(trackedImage);
         }
 
         foreach (ARTrackedImage trackedImage in args.updated)
         {
-            if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
+            if (activeTrackedImage == trackedImage &&
+                trackedImage.trackingState == TrackingState.Tracking)
             {
-                SpawnOrUpdateObject(trackedImage);
+                EnsureObjectExists();
+                UpdateObjectTransform(trackedImage);
             }
         }
     }
 
-    private void SpawnOrUpdateObject(ARTrackedImage trackedImage)
+    private void TrySetActiveTrackedImage(ARTrackedImage trackedImage)
+    {
+        if (activeTrackedImage != null)
+            return;
+
+        activeTrackedImage = trackedImage;
+
+        EnsureObjectExists();
+        UpdateObjectTransform(trackedImage);
+    }
+
+    private void EnsureObjectExists()
+    {
+        if (spawnedInteractionRoot != null)
+            return;
+
+        if (interactionRootPrefab == null)
+        {
+            Debug.LogError("InteractionRoot prefab is not assigned in MarkerSpawnManager.");
+            return;
+        }
+
+        spawnedInteractionRoot = Instantiate(interactionRootPrefab);
+        Debug.Log("InteractionRoot spawned once.");
+    }
+
+    private void UpdateObjectTransform(ARTrackedImage trackedImage)
     {
         if (spawnedInteractionRoot == null)
         {
-            spawnedInteractionRoot = Instantiate(interactionRootPrefab);
+            Debug.LogWarning("Cannot update object transform because spawnedInteractionRoot is null.");
+            return;
+        }
+
+        if (trackedImage == null)
+        {
+            Debug.LogWarning("Cannot update object transform because trackedImage is null.");
+            return;
         }
 
         spawnedInteractionRoot.transform.SetParent(trackedImage.transform);
