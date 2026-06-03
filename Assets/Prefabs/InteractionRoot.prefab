@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressureSyncSender
   leftValveWheel: {fileID: 975924331853515119}
   rightValveWheel: {fileID: 2013307330096130686}
-  serverUrl: http://192.168.2.7:3000/valve-state
+  serverUrl: http://10.42.0.70:3000/valve-state
   sendInterval: 0.2
 --- !u!1 &2623434760962133368
 GameObject:

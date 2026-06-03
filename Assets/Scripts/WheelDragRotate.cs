@@ -74,7 +74,7 @@ public class WheelDragRotate : MonoBehaviour
 
     private void UpdateValveValue(float angle)
     {
-        float changeAmount = angle * valveChangeSpeed;
+        float changeAmount = -angle * valveChangeSpeed;
         valveValue = Mathf.Clamp(valveValue + changeAmount, 0f, 100f);
     }
 }
