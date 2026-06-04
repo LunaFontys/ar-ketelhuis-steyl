@@ -89,7 +89,7 @@ public class MarkerSpawnManager : MonoBehaviour
 
         spawnedInteractionRoot.transform.SetParent(trackedImage.transform);
         spawnedInteractionRoot.transform.localPosition = localPositionOffset;
-        spawnedInteractionRoot.transform.localRotation = Quaternion.Euler(localRotationOffset);
+        spawnedInteractionRoot.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         spawnedInteractionRoot.transform.localScale = localScale;
         spawnedInteractionRoot.SetActive(true);
     }
