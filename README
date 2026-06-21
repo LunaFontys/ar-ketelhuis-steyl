@@ -1,36 +1,53 @@
-# AR Ketelhuis Steyl
+# Ketelhuis AR Unity Project
 
-AR Ketelhuis Steyl is a Unity AR prototype made for a school/client project at Fontys. The goal of the project is to explore how AR can be used to create an interactive educational experience for the Ketelhuis in Steyl.
+## Unity Version
 
-The prototype focuses on placing and interacting with AR objects on a tablet. One of the main interactions is a valve mechanic where the user turns a virtual valve to affect the state of the experience.
+Unity 6000.3.11f1
 
-## Context
+## Required Packages
 
-This project was made during my HBO-ICT study at Fontys University of Applied Sciences. The project was connected to the Ketelhuis in Steyl, where the goal was to design an educational experience for primary school pupils.
+* AR Foundation
+* ARCore XR Plugin
 
-## My contribution
+## Project Overview
 
-I worked on the Unity AR prototype and focused on testing basic AR interaction. I set up AR Foundation, plane detection, object placement, and a first valve interaction prototype.
+This project uses marker-based AR tracking.
 
-## Features
+When a tracked image is detected, an InteractionRoot prefab is spawned. The prefab contains two virtual valves. Valve values are sent to a Node.js server and can be visualized through a browser-based cabinet interface.
 
-- AR plane detection
-- Tap-to-place interaction
-- Interactive valve prototype
-- Visual feedback through object state changes
-- Unity tablet build testing
+## Main Scripts
 
-## Tech stack
+MarkerSpawnManager
 
-- Unity
-- AR Foundation
-- ARCore
-- C#
+Handles tracked image detection and spawns the InteractionRoot prefab.
 
-## Current status
+WheelDragRotate
 
-This project is still a prototype. The main goal was to validate basic AR placement and interaction before developing a more complete educational experience.
+Handles valve interaction and stores ValveValue.
 
-## Media
+PressureSyncSender
 
-Demo video and screenshots will be added later.
+Reads valve values and sends them to the server.
+
+## Running the Project
+
+1. Open the project in Unity.
+2. Ensure the server is running.
+
+node valve-sync-server.js
+
+3. Update the server IP address in PressureSyncSender.
+4. Build the project to an Android device.
+5. Open cabinet.html in a browser.
+6. Scan the marker and test valve synchronization.
+
+## Important Notes
+
+* Unity uses HTTP instead of HTTPS.
+* Allow Downloads Over HTTP must be set to Always Allowed.
+* The tablet and server must be connected to the same network.
+* Verify the server IP address whenever the network changes.
+
+## Additional Documentation
+
+See the project handover document for a more detailed explanation of the current implementation, known issues, and recommended next steps.
